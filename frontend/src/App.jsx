@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import ChatInterface from './components/ChatInterface';
+import GitHubAuth from './components/GitHubAuth';
 import { api } from './api';
 import './App.css';
 
@@ -9,11 +10,36 @@ function App() {
   const [currentConversationId, setCurrentConversationId] = useState(null);
   const [currentConversation, setCurrentConversation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
-  // Load conversations on mount
+  // Check auth status on mount
   useEffect(() => {
-    loadConversations();
+    checkAuth();
   }, []);
+
+  // Load conversations when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadConversations();
+    }
+  }, [isAuthenticated]);
+
+  const checkAuth = async () => {
+    try {
+      const status = await api.checkGitHubAuthStatus();
+      setIsAuthenticated(status.authenticated);
+    } catch (error) {
+      console.error('Failed to check auth:', error);
+      setIsAuthenticated(false);
+    } finally {
+      setCheckingAuth(false);
+    }
+  };
+
+  const handleAuthenticated = () => {
+    setIsAuthenticated(true);
+  };
 
   // Load conversation details when selected
   useEffect(() => {
@@ -183,17 +209,28 @@ function App() {
 
   return (
     <div className="app">
-      <Sidebar
-        conversations={conversations}
-        currentConversationId={currentConversationId}
-        onSelectConversation={handleSelectConversation}
-        onNewConversation={handleNewConversation}
-      />
-      <ChatInterface
-        conversation={currentConversation}
-        onSendMessage={handleSendMessage}
-        isLoading={isLoading}
-      />
+      {checkingAuth ? (
+        <div className="app-loading">
+          <div className="spinner"></div>
+          <p>Loading...</p>
+        </div>
+      ) : !isAuthenticated ? (
+        <GitHubAuth onAuthenticated={handleAuthenticated} />
+      ) : (
+        <>
+          <Sidebar
+            conversations={conversations}
+            currentConversationId={currentConversationId}
+            onSelectConversation={handleSelectConversation}
+            onNewConversation={handleNewConversation}
+          />
+          <ChatInterface
+            conversation={currentConversation}
+            onSendMessage={handleSendMessage}
+            isLoading={isLoading}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -112,4 +112,70 @@ export const api = {
       }
     }
   },
+
+  // ========================================================================
+  // GitHub Authentication
+  // ========================================================================
+
+  /**
+   * Start GitHub Device Flow authentication.
+   * @returns {Promise<{user_code: string, verification_uri: string, device_code: string, expires_in: number, interval: number}>}
+   */
+  async startGitHubAuth() {
+    const response = await fetch(`${API_BASE}/api/auth/github/start`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to start GitHub auth');
+    }
+    return response.json();
+  },
+
+  /**
+   * Poll for GitHub access token.
+   * @param {string} deviceCode - The device code from startGitHubAuth
+   * @returns {Promise<{status: 'success'|'pending', token?: string}>}
+   */
+  async pollGitHubAuth(deviceCode) {
+    const response = await fetch(`${API_BASE}/api/auth/github/poll`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ device_code: deviceCode }),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to poll GitHub auth');
+    }
+    return response.json();
+  },
+
+  /**
+   * Check GitHub authentication status.
+   * @returns {Promise<{authenticated: boolean, provider?: string}>}
+   */
+  async checkGitHubAuthStatus() {
+    const response = await fetch(`${API_BASE}/api/auth/github/status`);
+    if (!response.ok) {
+      throw new Error('Failed to check auth status');
+    }
+    return response.json();
+  },
+
+  /**
+   * Logout from GitHub (clear token).
+   * @returns {Promise<{status: string}>}
+   */
+  async logoutGitHub() {
+    const response = await fetch(`${API_BASE}/api/auth/github/logout`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      throw new Error('Failed to logout');
+    }
+    return response.json();
+  },
 };
+

@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import Stage1 from './Stage1';
 import Stage2 from './Stage2';
 import Stage3 from './Stage3';
+import StageProgress from './StageProgress';
 import './ChatInterface.css';
 
 export default function ChatInterface({
@@ -71,6 +72,14 @@ export default function ChatInterface({
               ) : (
                 <div className="assistant-message">
                   <div className="message-label">LLM Council</div>
+
+                  {/* Stage Progress Indicator */}
+                  <StageProgress
+                    stage1={msg.stage1}
+                    stage2={msg.stage2}
+                    stage3={msg.stage3}
+                    loading={msg.loading}
+                  />
 
                   {/* Stage 1 */}
                   {msg.loading?.stage1 && (

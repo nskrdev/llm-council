@@ -10,7 +10,17 @@ import json
 import asyncio
 
 from . import storage
-from .council import run_full_council, generate_conversation_title, stage1_collect_responses, stage2_collect_rankings, stage3_synthesize_final, calculate_aggregate_rankings
+from . import provider
+from .council import (
+    run_full_council,
+    generate_conversation_title,
+    stage1_collect_responses,
+    stage2_collect_rankings,
+    stage3_synthesize_final,
+    calculate_aggregate_rankings,
+)
+from .github_auth import GitHubAuth, verify_github_token
+from .config import GITHUB_CLIENT_ID
 
 app = FastAPI(title="LLM Council API")
 
@@ -24,18 +34,45 @@ app.add_middleware(
 )
 
 
+# Load saved GitHub token on startup
+@app.on_event("startup")
+async def startup_event():
+    """Load saved tokens on startup."""
+    if GITHUB_CLIENT_ID:
+        auth = GitHubAuth(GITHUB_CLIENT_ID)
+        token = auth.load_token()
+        if token:
+            # Verify it's still valid
+            is_valid = await verify_github_token(token)
+            if is_valid:
+                provider.set_github_token(token)
+                print("✓ Loaded saved GitHub token")
+            else:
+                print("✗ Saved GitHub token is invalid, clearing")
+                auth.clear_token()
+
+
 class CreateConversationRequest(BaseModel):
     """Request to create a new conversation."""
+
     pass
 
 
 class SendMessageRequest(BaseModel):
     """Request to send a message in a conversation."""
+
     content: str
+
+
+class PollAuthRequest(BaseModel):
+    """Request to poll for GitHub auth token."""
+
+    device_code: str
 
 
 class ConversationMetadata(BaseModel):
     """Conversation metadata for list view."""
+
     id: str
     created_at: str
     title: str
@@ -44,6 +81,7 @@ class ConversationMetadata(BaseModel):
 
 class Conversation(BaseModel):
     """Full conversation with all messages."""
+
     id: str
     created_at: str
     title: str
@@ -54,6 +92,103 @@ class Conversation(BaseModel):
 async def root():
     """Health check endpoint."""
     return {"status": "ok", "service": "LLM Council API"}
+
+
+# ============================================================================
+# GitHub Authentication Endpoints
+# ============================================================================
+
+
+@app.post("/api/auth/github/start")
+async def start_github_auth():
+    """
+    Start GitHub Device Flow authentication.
+    Returns device code and verification URL for user.
+    """
+    if not GITHUB_CLIENT_ID:
+        raise HTTPException(
+            status_code=500,
+            detail="GitHub Client ID not configured. Please set GITHUB_CLIENT_ID in .env",
+        )
+
+    auth = GitHubAuth(GITHUB_CLIENT_ID)
+
+    try:
+        flow_data = await auth.start_device_flow()
+        return {
+            "user_code": flow_data["user_code"],
+            "verification_uri": flow_data["verification_uri"],
+            "device_code": flow_data["device_code"],
+            "expires_in": flow_data["expires_in"],
+            "interval": flow_data.get("interval", 5),
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to start auth flow: {str(e)}"
+        )
+
+
+@app.post("/api/auth/github/poll")
+async def poll_github_auth(request: PollAuthRequest):
+    """
+    Poll for GitHub access token after user authorizes.
+    Call this repeatedly until you get a token or error.
+    """
+    if not GITHUB_CLIENT_ID:
+        raise HTTPException(status_code=500, detail="GitHub Client ID not configured")
+
+    auth = GitHubAuth(GITHUB_CLIENT_ID)
+
+    try:
+        token = await auth.poll_for_token(request.device_code, interval=5, timeout=5)
+
+        if token:
+            # Store token in provider module
+            provider.set_github_token(token)
+
+            return {"status": "success", "token": token}
+        else:
+            return {"status": "pending"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Polling failed: {str(e)}")
+
+
+@app.get("/api/auth/github/status")
+async def github_auth_status():
+    """Check if GitHub token is available and valid."""
+    token = provider.get_github_token()
+
+    if not token:
+        # Try to load from saved file
+        if GITHUB_CLIENT_ID:
+            auth = GitHubAuth(GITHUB_CLIENT_ID)
+            token = auth.load_token()
+            if token:
+                provider.set_github_token(token)
+
+    if token:
+        # Verify token is still valid
+        is_valid = await verify_github_token(token)
+        return {"authenticated": is_valid, "provider": "github"}
+
+    return {"authenticated": False}
+
+
+@app.post("/api/auth/github/logout")
+async def github_logout():
+    """Clear GitHub authentication."""
+    if GITHUB_CLIENT_ID:
+        auth = GitHubAuth(GITHUB_CLIENT_ID)
+        auth.clear_token()
+
+    provider.set_github_token(None)
+
+    return {"status": "logged_out"}
+
+
+# ============================================================================
+# Conversation Endpoints
+# ============================================================================
 
 
 @app.get("/api/conversations", response_model=List[ConversationMetadata])
@@ -108,10 +243,7 @@ async def send_message(conversation_id: str, request: SendMessageRequest):
 
     # Add assistant message with all stages
     storage.add_assistant_message(
-        conversation_id,
-        stage1_results,
-        stage2_results,
-        stage3_result
+        conversation_id, stage1_results, stage2_results, stage3_result
     )
 
     # Return the complete response with metadata
@@ -119,7 +251,7 @@ async def send_message(conversation_id: str, request: SendMessageRequest):
         "stage1": stage1_results,
         "stage2": stage2_results,
         "stage3": stage3_result,
-        "metadata": metadata
+        "metadata": metadata,
     }
 
 
@@ -145,7 +277,9 @@ async def send_message_stream(conversation_id: str, request: SendMessageRequest)
             # Start title generation in parallel (don't await yet)
             title_task = None
             if is_first_message:
-                title_task = asyncio.create_task(generate_conversation_title(request.content))
+                title_task = asyncio.create_task(
+                    generate_conversation_title(request.content)
+                )
 
             # Stage 1: Collect responses
             yield f"data: {json.dumps({'type': 'stage1_start'})}\n\n"
@@ -154,13 +288,19 @@ async def send_message_stream(conversation_id: str, request: SendMessageRequest)
 
             # Stage 2: Collect rankings
             yield f"data: {json.dumps({'type': 'stage2_start'})}\n\n"
-            stage2_results, label_to_model = await stage2_collect_rankings(request.content, stage1_results)
-            aggregate_rankings = calculate_aggregate_rankings(stage2_results, label_to_model)
+            stage2_results, label_to_model = await stage2_collect_rankings(
+                request.content, stage1_results
+            )
+            aggregate_rankings = calculate_aggregate_rankings(
+                stage2_results, label_to_model
+            )
             yield f"data: {json.dumps({'type': 'stage2_complete', 'data': stage2_results, 'metadata': {'label_to_model': label_to_model, 'aggregate_rankings': aggregate_rankings}})}\n\n"
 
             # Stage 3: Synthesize final answer
             yield f"data: {json.dumps({'type': 'stage3_start'})}\n\n"
-            stage3_result = await stage3_synthesize_final(request.content, stage1_results, stage2_results)
+            stage3_result = await stage3_synthesize_final(
+                request.content, stage1_results, stage2_results
+            )
             yield f"data: {json.dumps({'type': 'stage3_complete', 'data': stage3_result})}\n\n"
 
             # Wait for title generation if it was started
@@ -171,10 +311,7 @@ async def send_message_stream(conversation_id: str, request: SendMessageRequest)
 
             # Save complete assistant message
             storage.add_assistant_message(
-                conversation_id,
-                stage1_results,
-                stage2_results,
-                stage3_result
+                conversation_id, stage1_results, stage2_results, stage3_result
             )
 
             # Send completion event
@@ -190,10 +327,11 @@ async def send_message_stream(conversation_id: str, request: SendMessageRequest)
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
-        }
+        },
     )
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8001)

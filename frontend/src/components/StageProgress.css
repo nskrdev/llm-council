@@ -1,0 +1,111 @@
+.stage-progress {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e0e0e0;
+  gap: 8px;
+}
+
+.stage-progress-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.stage-indicator {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 2px solid #d0d0d0;
+  color: #999;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.stage-indicator.active {
+  border-color: #4a90e2;
+  background: #e8f4fd;
+  color: #4a90e2;
+}
+
+.stage-indicator.completed {
+  border-color: #4caf50;
+  background: #4caf50;
+  color: white;
+}
+
+.stage-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #4a90e2;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.stage-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stage-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.stage-status {
+  font-size: 12px;
+  color: #666;
+}
+
+.stage-indicator.active + .stage-label .stage-name {
+  color: #4a90e2;
+}
+
+.stage-indicator.completed + .stage-label .stage-name {
+  color: #4caf50;
+}
+
+.stage-connector {
+  flex: 1;
+  height: 2px;
+  background: #d0d0d0;
+  margin: 0 8px;
+  transition: background 0.3s;
+}
+
+.stage-connector.completed {
+  background: #4caf50;
+}
+
+/* Hide connectors for small screens */
+@media (max-width: 768px) {
+  .stage-progress {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stage-progress-item {
+    flex-direction: row;
+  }
+
+  .stage-connector {
+    display: none;
+  }
+}

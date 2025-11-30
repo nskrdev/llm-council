@@ -1,25 +1,135 @@
 .stage3 {
-  background: #f0fff0;
-  border-color: #c8e6c8;
+  margin: 24px 0;
 }
 
-.final-response {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 6px;
-  border: 1px solid #c8e6c8;
+.chairman-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
 }
 
-.chairman-label {
-  color: #2d8a2d;
-  font-size: 12px;
-  font-family: monospace;
-  margin-bottom: 12px;
+.chairman-header {
+  padding: 20px 24px;
+  border-left: 4px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chairman-badge-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chairman-badge {
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chairman-model {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.chairman-meta {
+  text-align: right;
+}
+
+.meta-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.final-answer-section {
+  padding: 24px;
+}
+
+.final-answer-label {
+  margin: 0 0 16px 0;
+  color: #1e293b;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.answer-icon {
+  font-size: 1.5rem;
+}
+
+.final-answer-content {
+  background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+  padding: 24px;
+  border-radius: 12px;
+  border: 2px solid #86efac;
+  line-height: 1.8;
+  color: #1e293b;
+  font-size: 1.05rem;
+}
+
+.synthesis-info {
+  padding: 20px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.info-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.info-text {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.info-text strong {
+  color: #1e293b;
   font-weight: 600;
 }
 
-.final-text {
-  color: #333;
-  line-height: 1.7;
-  font-size: 15px;
+/* Error state */
+.error-message {
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #fef2f2;
+  border: 2px solid #fca5a5;
+  margin: 0;
+}
+
+.error-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.error-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin-bottom: 8px;
+}
+
+.error-details {
+  color: #7f1d1d;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }

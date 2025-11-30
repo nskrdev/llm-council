@@ -186,6 +186,43 @@ async def github_logout():
     return {"status": "logged_out"}
 
 
+@app.get("/api/github/models")
+async def list_github_models():
+    """List all available GitHub Copilot models."""
+    from .github_models import list_available_models
+
+    token = provider.get_github_token()
+    if not token:
+        raise HTTPException(
+            status_code=401, detail="Not authenticated with GitHub. Please login first."
+        )
+
+    models = await list_available_models(token)
+
+    if models is None:
+        raise HTTPException(
+            status_code=500, detail="Failed to fetch models from GitHub API"
+        )
+
+    # Categorize models
+    categorized = {
+        "openai": [m for m in models if "gpt" in m.lower() or "o1" in m.lower()],
+        "anthropic": [m for m in models if "claude" in m.lower()],
+        "google": [m for m in models if "gemini" in m.lower()],
+        "xai": [m for m in models if "grok" in m.lower()],
+        "other": [
+            m
+            for m in models
+            if not any(
+                x in m.lower()
+                for x in ["gpt", "o1", "claude", "gemini", "grok", "embedding"]
+            )
+        ],
+    }
+
+    return {"total": len(models), "models": models, "categorized": categorized}
+
+
 # ============================================================================
 # Conversation Endpoints
 # ============================================================================

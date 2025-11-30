@@ -1,65 +1,104 @@
 .stage {
   margin: 24px 0;
-  padding: 20px;
-  background: #fafafa;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .stage-title {
-  margin: 0 0 16px 0;
-  color: #333;
-  font-size: 16px;
+  margin: 0 0 8px 0;
+  color: #1e293b;
+  font-size: 1.5rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.tabs {
+.stage-icon {
+  font-size: 1.5rem;
+}
+
+.stage-description {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.model-tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
-.tab {
-  padding: 8px 16px;
-  background: #ffffff;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px 6px 0 0;
-  color: #666;
+.model-tab {
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
   transition: all 0.2s;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #475569;
 }
 
-.tab:hover {
-  background: #f0f0f0;
-  color: #333;
-  border-color: #4a90e2;
+.model-tab:hover {
+  border-color: var(--model-color, #4a90e2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.tab.active {
-  background: #ffffff;
-  color: #4a90e2;
-  border-color: #4a90e2;
-  border-bottom-color: #ffffff;
+.model-tab.active {
+  background: var(--model-color, #4a90e2);
+  color: white;
+  border-color: var(--model-color, #4a90e2);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.model-tab-name {
   font-weight: 600;
 }
 
-.tab-content {
-  background: #ffffff;
-  padding: 16px;
+.response-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.response-header {
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-left: 4px solid;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.model-badge {
+  padding: 6px 12px;
   border-radius: 6px;
-  border: 1px solid #e0e0e0;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.model-name {
-  color: #888;
-  font-size: 12px;
-  margin-bottom: 12px;
-  font-family: monospace;
+.model-fullname {
+  color: #64748b;
+  font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
 }
 
-.response-text {
-  color: #333;
-  line-height: 1.6;
+.response-content {
+  padding: 24px;
+  color: #1e293b;
+  line-height: 1.7;
 }

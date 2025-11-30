@@ -72,7 +72,7 @@ COUNCIL_MODELS = [
 ]
 
 # Chairman model - synthesizes final response
-CHAIRMAN_MODEL = {"provider": "github", "model": "claude-sonnet-4.5"}
+CHAIRMAN_MODEL = {"provider": "github", "model": "gpt-4o-mini"}
 
 # Alternative: Use OpenRouter for specific models (requires OPENROUTER_API_KEY in .env)
 # Uncomment if you want to mix GitHub Copilot models with OpenRouter models

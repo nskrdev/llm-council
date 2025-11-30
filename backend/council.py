@@ -98,7 +98,40 @@ Now provide your evaluation and ranking:"""
     messages = [{"role": "user", "content": ranking_prompt}]
 
     # Get rankings from all council models in parallel
-    responses = await query_models_parallel(COUNCIL_MODELS, messages)
+    # We need to customize the prompt for each model to implement the Recusal Rule
+    # (Models should not vote for themselves)
+    
+    tasks = []
+    model_keys = []
+    
+    for config in COUNCIL_MODELS:
+        provider = config["provider"]
+        model = config["model"]
+        model_key = f"{provider}/{model}"
+        model_keys.append(model_key)
+        
+        # Find which label corresponds to this model (if any)
+        my_label = None
+        for label, m_key in label_to_model.items():
+            # label is "Response A", m_key is "provider/model"
+            if m_key == model_key:
+                my_label = label
+                break
+        
+        # Customize prompt for this model
+        current_prompt = ranking_prompt
+        if my_label:
+            current_prompt += f"\n\nIMPORTANT: You wrote {my_label}. To ensure fair voting, you must NOT include {my_label} in your final ranking. Only rank the other responses."
+        
+        messages = [{"role": "user", "content": current_prompt}]
+        tasks.append(query_model(provider, model, messages))
+
+    # Execute all queries
+    import asyncio
+    responses_list = await asyncio.gather(*tasks)
+    
+    # Map back to dictionary format expected by existing code
+    responses = {key: resp for key, resp in zip(model_keys, responses_list)}
 
     # Format results
     stage2_results = []
@@ -242,8 +275,23 @@ def calculate_aggregate_rankings(
 
         # Parse the ranking from the structured format
         parsed_ranking = parse_ranking_from_text(ranking_text)
+        
+        # Identify the voting model
+        voter_model = ranking["model"]
+        
+        # Identify the label of the voting model (if any)
+        voter_label = None
+        for label, m_name in label_to_model.items():
+            if m_name == voter_model:
+                voter_label = label
+                break
 
         for position, label in enumerate(parsed_ranking, start=1):
+            # RECUSAL CHECK:
+            # If a model accidentally voted for itself despite instructions, ignore that vote
+            if label == voter_label:
+                continue
+                
             if label in label_to_model:
                 model_name = label_to_model[label]
                 model_positions[model_name].append(position)

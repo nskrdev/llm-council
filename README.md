@@ -337,6 +337,13 @@ Rank these responses from best to worst...
 
 **Result:** Pure, unbiased quality assessment! 
 
+### The Recusal Rule (New!)
+
+To further prevent bias, we've implemented a **Recusal Rule**:
+- Models are explicitly instructed **NOT** to vote for their own response.
+- If a model ignores this instruction and votes for itself anyway, that vote is **automatically discarded** from the final score calculation.
+- This ensures that a model's ranking is determined solely by its peers, eliminating self-preference bias. 
+
 ## 🤝 Contributing
 
 Want to add features or improve the project? **Please raise an issue!**

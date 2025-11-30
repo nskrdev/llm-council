@@ -118,6 +118,11 @@ The app uses GitHub Copilot's free-tier models. No credit card required!
 **Subsequent runs:**
 - Just run `./start.sh` - authentication is automatic!
 
+**Important Notes:**
+
+- **Enable Models:** Some models need to be manually enabled in your [GitHub Copilot settings](https://github.com/settings/copilot). Go to "Model Access" and enable the models you want to use.
+- **Subscription Requirements:** Some models might require a GitHub Copilot Pro+ subscription to access.
+
 ### 3. Configure Models (Optional)
 
 Edit `backend/config.py` to customize your council:
@@ -143,6 +148,10 @@ CHAIRMAN_MODEL = {"provider": "github", "model": "claude-sonnet-4.5"}
 | `claude-haiku-4.5` | Anthropic | Fast responses |
 | `gemini-2.5-pro` | Google | Multimodal, factual |
 | `grok-code-fast-1` | xAI | Code generation |
+
+**Note:** 
+- Some models might need a GitHub Copilot Pro+ subscription to use.
+- Some models need to be manually enabled in your [GitHub Copilot settings](https://github.com/settings/copilot) under "Model Access" before they appear in the available models list.
 
 ### How to Check All Available Models
 

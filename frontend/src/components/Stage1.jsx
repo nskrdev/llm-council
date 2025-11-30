@@ -47,7 +47,6 @@ export default function Stage1({ responses }) {
   return (
     <div className="stage stage1">
       <h3 className="stage-title">
-        <span className="stage-icon">💭</span>
         Stage 1: Individual Responses
       </h3>
       <p className="stage-description">

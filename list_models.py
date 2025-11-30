@@ -86,7 +86,7 @@ async def main():
 
     print()
     print("-" * 70)
-    print(f"\n💡 To use these models, edit: backend/config.py")
+    print(f"\nTo use these models, edit: backend/config.py")
     print(f"\n   Example:")
     print(f"   COUNCIL_MODELS = [")
     print(

@@ -66,7 +66,6 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
   return (
     <div className="stage stage2">
       <h3 className="stage-title">
-        <span className="stage-icon">🗳️</span>
         Stage 2: Peer Review & Voting
       </h3>
       <p className="stage-description">
@@ -79,7 +78,6 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
           className={`stage2-tab ${activeTab === 'summary' ? 'active' : ''}`}
           onClick={() => setActiveTab('summary')}
         >
-          <span className="tab-icon">📊</span>
           Voting Summary
         </button>
         {rankings.map((rank, index) => {
@@ -99,13 +97,12 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
 
       {activeTab === 'summary' ? (
         <div className="voting-summary">
-          <h4 className="section-title">🏆 Final Rankings</h4>
+          <h4 className="section-title">Final Rankings</h4>
           
           {aggregateRankings && aggregateRankings.length > 0 && (
             <div className="rankings-podium">
               {aggregateRankings.map((agg, index) => {
                 const modelInfo = getModelInfo(agg.model);
-                const medals = ['🥇', '🥈', '🥉'];
                 return (
                   <div 
                     key={index} 
@@ -113,7 +110,7 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
                     style={{ '--model-color': modelInfo.color }}
                   >
                     <div className="podium-rank">
-                      {medals[index] || `#${index + 1}`}
+                      #{index + 1}
                     </div>
                     <div className="podium-model" style={{ color: modelInfo.color }}>
                       {modelInfo.shortName}
@@ -130,7 +127,7 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
             </div>
           )}
 
-          <h4 className="section-title">🔤 Response Key</h4>
+          <h4 className="section-title">Response Key</h4>
           <p className="section-description">
             During voting, responses were anonymized to prevent bias. Here's what each letter represents:
           </p>
@@ -157,7 +154,7 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
             })}
           </div>
 
-          <h4 className="section-title">📋 Voting Matrix</h4>
+          <h4 className="section-title">Voting Matrix</h4>
           <p className="section-description">
             See how each model ranked every response (1 = best, higher = worse)
           </p>
@@ -229,7 +226,7 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
 
                 {rank.parsed_ranking && rank.parsed_ranking.length > 0 && (
                   <div className="extracted-ranking">
-                    <h5>📊 Extracted Ranking</h5>
+                    <h5>Extracted Ranking</h5>
                     <div className="ranking-list">
                       {rank.parsed_ranking.map((label, i) => {
                         const votedModel = labelToModel?.[label];

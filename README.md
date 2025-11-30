@@ -6,7 +6,7 @@
 
 ---
 
-## 🍴 About This Fork
+## About This Fork
 
 **This is a fork of [@karpathy's LLM Council](https://github.com/karpathy/llm-council)** with one key modification: it uses **GitHub Copilot's free-tier models** instead of OpenRouter.
 
@@ -24,7 +24,7 @@ As a student with GitHub Copilot access, I wanted to use LLM Council without pay
 
 ---
 
-## 🎓 Perfect for Students!
+## Perfect for Students!
 
 If you're a student with **GitHub Student Developer Pack**, you already have Copilot for free! This means you can:
 - Access GPT-5, Claude 4.5, Gemini 2.5 Pro, and Grok **at no cost**
@@ -36,29 +36,29 @@ If you're a student with **GitHub Student Developer Pack**, you already have Cop
 
 ---
 
-## 🎯 What is LLM Council?
+## What is LLM Council?
 
 Instead of asking a single LLM for an answer, LLM Council orchestrates a 3-stage deliberation process where multiple AI models collaborate to produce superior responses:
 
 ### The 3-Stage Process
 
-**Stage 1: Independent Responses** 💭
+**Stage 1: Independent Responses**
 - Your question is sent to all council members simultaneously
 - Each model provides their answer independently
 - No model sees what others are saying yet
 
-**Stage 2: Anonymous Peer Review** 🗳️
+**Stage 2: Anonymous Peer Review**
 - Each model evaluates **all** responses (including their own!)
 - Responses are anonymized as "Response A, B, C, D..." to prevent bias
 - Models rank responses by quality without knowing who wrote what
 - This prevents brand loyalty and ensures objective evaluation
 
-**Stage 3: Chairman Synthesis** ⚖️
+**Stage 3: Chairman Synthesis**
 - A designated chairman model reviews all responses and rankings
 - Synthesizes the best insights from the council's collective wisdom
 - Produces a comprehensive final answer with reasoning
 
-## 🌟 Why Anonymous Peer Review Works
+## Why Anonymous Peer Review Works
 
 Just like academic paper reviews, **blind evaluation prevents bias**:
 - Models can't favor their own company's products
@@ -71,14 +71,14 @@ Just like academic paper reviews, **blind evaluation prevents bias**:
 
 ## ✨ Key Features
 
-- **🎨 Beautiful, Modern UI** - Color-coded models, voting matrix, podium rankings
-- **🔒 GitHub Copilot Integration** - Free access to GPT-5, Claude 4.5, Gemini 2.5 Pro, Grok!
-- **📊 Full Transparency** - See exactly how each model voted and why
-- **🎯 Response Key** - Clear mapping showing which letter corresponds to which model
-- **💾 Conversation History** - All deliberations saved locally
-- **⚡ Fast & Async** - Parallel queries for maximum speed
+- Beautiful, Modern UI - Color-coded models, voting matrix, podium rankings
+- GitHub Copilot Integration - Free access to GPT-5, Claude 4.5, Gemini 2.5 Pro, Grok!
+- Full Transparency - See exactly how each model voted and why
+- Response Key - Clear mapping showing which letter corresponds to which model
+- Conversation History - All deliberations saved locally
+- Fast & Async - Parallel queries for maximum speed
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -144,7 +144,7 @@ CHAIRMAN_MODEL = {"provider": "github", "model": "claude-sonnet-4.5"}
 | `gemini-2.5-pro` | Google | Multimodal, factual |
 | `grok-code-fast-1` | xAI | Code generation |
 
-### 🔍 How to Check All Available Models
+### How to Check All Available Models
 
 **Method 1: Python Script (Recommended)**
 ```bash
@@ -168,7 +168,7 @@ Visit http://localhost:8001/api/github/models after starting the backend.
 
 The models list updates as GitHub adds new models, so check regularly for new options!
 
-## 🎮 Usage
+## Usage
 
 ### Start the Application
 
@@ -196,7 +196,7 @@ Then open **http://localhost:5173** in your browser.
 
 Press `Ctrl+C` in the terminal running `start.sh`, or stop both terminal processes.
 
-## 🎨 UI Features
+## UI Features
 
 ### Stage 1: Individual Responses
 - **Color-coded model badges** - Each AI has a unique color
@@ -204,19 +204,19 @@ Press `Ctrl+C` in the terminal running `start.sh`, or stop both terminal process
 - **Professional cards** - Clean, modern design
 
 ### Stage 2: Peer Review & Voting
-- **🏆 Podium Rankings** - See winners with gold/silver/bronze medals
-- **📋 Voting Matrix** - Visual table showing exactly how each model ranked others
-- **🔤 Response Key** - Clear legend mapping "Response A/B/C" to actual models
-- **✅ Top Choice Highlighting** - #1 votes shown in green
-- **📊 Individual Evaluations** - Click any model to read their full analysis
+- Podium Rankings - See winners with gold/silver/bronze medals
+- Voting Matrix - Visual table showing exactly how each model ranked others
+- Response Key - Clear legend mapping "Response A/B/C" to actual models
+- Top Choice Highlighting - #1 votes shown in green
+- Individual Evaluations - Click any model to read their full analysis
 
 ### Stage 3: Chairman's Decision
-- **👔 Chairman Badge** - Clear indication of the synthesizing model
-- **💡 Final Answer** - Highlighted in green for easy identification
-- **📝 Reasoning** - Explanation of why this answer was chosen
-- **ℹ️ Context Info** - Shows how the synthesis considered all inputs
+- Chairman Badge - Clear indication of the synthesizing model
+- Final Answer - Highlighted in green for easy identification
+- Reasoning - Explanation of why this answer was chosen
+- Context Info - Shows how the synthesis considered all inputs
 
-## 🏗️ Architecture
+## Architecture
 
 ### Backend (FastAPI)
 
@@ -255,7 +255,7 @@ frontend/src/
 └── index.css                    # Global styles
 ```
 
-## 🔧 Advanced Configuration
+## Advanced Configuration
 
 ### Using OpenRouter (Alternative)
 
@@ -288,7 +288,18 @@ COUNCIL_MODELS = [
 ]
 ```
 
-## 📊 How It Works: The Anonymous Voting System
+### Future: Direct API Access (Not Yet Implemented)
+
+**Planned feature:** Direct integration with Google AI Studio for Gemini models.
+
+This would allow mixing:
+- Claude from GitHub Copilot (free)
+- Gemini from Google AI Studio (free tier available)
+- Any OpenRouter models (paid)
+
+**Want this feature?** Please raise an issue! It's a great learning opportunity for me to implement more provider integrations.
+
+## How It Works: The Anonymous Voting System
 
 ### Stage 2 in Detail
 
@@ -315,36 +326,26 @@ Rank these responses from best to worst...
 - Only the UI (after voting) and Chairman (for synthesis) see the true identities
 - Each model votes on "Response A/B/C/D" without knowing who wrote what
 
-**Result:** Pure, unbiased quality assessment! 🎯
+**Result:** Pure, unbiased quality assessment! 
 
 ## 🤝 Contributing
 
-This is a "vibe code" project - feel free to fork and modify as you like! Some ideas:
-- Add more providers (Anthropic API, OpenAI API direct)
-- Implement streaming responses
-- Add cost tracking
-- Export deliberations to PDF/markdown
-- Custom ranking criteria beyond "accuracy and insight"
+Want to add features or improve the project? **Please raise an issue!**
 
-## 📜 License
+I'm still learning and this is a great learning opportunity for me. Whether it's:
+- Bug fixes
+- New features (streaming responses, cost tracking, PDF export)
+- More provider integrations (Anthropic direct, OpenAI direct, etc.)
+- UI improvements
+- Documentation updates
+
+**Open an issue and let's discuss it!** I'll try my best to work on it. Your contributions help me learn too! 
+
+## License
 
 MIT License - Use freely, modify as you wish!
 
-## 🙏 Credits
-
-**Original Project:** [LLM Council](https://github.com/karpathy/llm-council) by [@karpathy](https://x.com/karpathy)
-
-Created as a fun Saturday hack for [reading books with LLMs](https://x.com/karpathy/status/1990577951671509438). The original used OpenRouter for API access.
-
-**This Fork's Additions:**
-- GitHub Copilot integration for free model access
-- OAuth device flow authentication
-- Enhanced UI with voting matrix and response key visualization
-- Multi-provider architecture supporting both GitHub Copilot and OpenRouter
-- Student-friendly: no additional API costs if you already have Copilot!
-
-**Why I forked it:** As a student with GitHub Copilot access, I wanted to explore multiple LLMs without paying for OpenRouter credits. This fork lets students and developers with Copilot use the same powerful deliberation system for free! 🎓
-
 ---
 
-**Built with:** FastAPI, React, Vite, GitHub Copilot API, and a healthy dose of AI democracy! 🗳️✨
+**Built with:** FastAPI, React, Vite, GitHub Copilot API, and a healthy dose of AI democracy! 
+

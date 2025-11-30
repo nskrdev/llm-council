@@ -60,7 +60,7 @@ export default function Stage3({ finalResponse }) {
               className="chairman-badge" 
               style={{ backgroundColor: chairmanInfo.color }}
             >
-              👔 Chairman
+              Chairman
             </span>
             <span className="chairman-model" style={{ color: chairmanInfo.color }}>
               {chairmanInfo.shortName}
@@ -85,7 +85,7 @@ export default function Stage3({ finalResponse }) {
           <>
             <div className="final-answer-section">
               <h4 className="final-answer-label">
-                <span className="answer-icon">💡</span>
+                
                 Final Council Answer
               </h4>
               <div className="final-answer-content markdown-content">

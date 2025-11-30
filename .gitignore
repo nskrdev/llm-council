@@ -11,7 +11,7 @@ wheels/
 
 # Keys and secrets
 .env
-
+.env.example
 # Data files
 data/
 

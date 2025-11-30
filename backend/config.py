@@ -24,31 +24,37 @@ GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID", "Ov23liTtv37ffCvVFZuH")
 # Council members - list of model configurations
 # Format: {"provider": "github|openrouter", "model": "model-id"}
 #
+# TIP: To see ALL available models, run: python list_models.py
+# Or visit: http://localhost:8001/api/github/models (when server is running)
+#
 # Available models via GitHub Copilot API (verified Nov 30, 2025):
 #
 # OpenAI GPT Series:
-# - gpt-5 (Latest GPT-5)
-# - gpt-5-mini (Smaller/faster GPT-5)
-# - gpt-4.1 (GPT-4.1)
-# - gpt-4o (GPT-4 Optimized - multiple versions available)
-# - gpt-4o-mini (Smaller/faster GPT-4o)
+# - gpt-5 (Latest GPT-5) - 400k context, 128k output
+# - gpt-5-mini (Smaller/faster GPT-5) - 264k context, 64k output
+# - gpt-4.1 (GPT-4.1) - 128k context, 16k output
+# - gpt-4o (GPT-4 Optimized) - 128k context, 4k output
+# - gpt-4o-mini (Smaller/faster GPT-4o) - 128k context, 4k output
 # - gpt-4-o-preview (GPT-4o preview)
 # - gpt-4 (GPT-4 base)
 # - gpt-3.5-turbo (GPT-3.5 Turbo)
 #
 # Anthropic Claude Series:
-# - claude-sonnet-4.5 (Latest Claude Sonnet 4.5)
-# - claude-sonnet-4 (Claude Sonnet 4)
-# - claude-haiku-4.5 (Fast Claude Haiku 4.5)
+# - claude-sonnet-4.5 (Latest Claude Sonnet 4.5) - 144k context, 16k output
+# - claude-sonnet-4 (Claude Sonnet 4) - 216k context, 16k output, supports thinking
+# - claude-haiku-4.5 (Fast Claude Haiku 4.5) - 144k context, 16k output
 #
 # Google Gemini Series:
-# - gemini-2.5-pro (Gemini 2.5 Pro)
+# - gemini-2.5-pro (Latest Gemini 2.5 Pro) - 128k context, 64k output, supports thinking
 #
 # xAI Grok:
-# - grok-code-fast-1 (Grok optimized for code)
+# - grok-code-fast-1 (Grok optimized for code) - 128k context, 64k output
 #
-# Note: Full list retrieved via GitHub Copilot API
-# Some models may require enabling in: https://github.com/settings/copilot
+# NOTE: "gemini-3-pro-preview" does NOT exist in the API - gemini-2.5-pro is the latest!
+# Some models require enabling in: https://github.com/settings/copilot
+#
+# EXPERIMENTAL: You can try any model name, even if not listed above.
+# The API will return an error if the model doesn't exist.
 
 COUNCIL_MODELS = [
     # Active models - diverse set of top performers from different companies

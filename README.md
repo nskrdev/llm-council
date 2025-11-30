@@ -118,10 +118,16 @@ The app uses GitHub Copilot's free-tier models. No credit card required!
 **Subsequent runs:**
 - Just run `./start.sh` - authentication is automatic!
 
-**Important Notes:**
+**⚠️ IMPORTANT - ENABLE MODELS FIRST:**
 
-- **Enable Models:** Some models need to be manually enabled in your [GitHub Copilot settings](https://github.com/settings/copilot). Go to "Model Access" and enable the models you want to use.
-- **Subscription Requirements:** Some models might require a GitHub Copilot Pro+ subscription to access.
+> **Before using LLM Council, you MUST manually enable models in your GitHub Copilot settings!**
+> 
+> 1. Visit [GitHub Copilot Settings → Model Access](https://github.com/settings/copilot)
+> 2. Enable the models you want to use (GPT-5, Claude 4.5, Gemini 2.5 Pro, Grok, etc.)
+> 3. Without this step, the models won't be available to the application!
+
+**Additional Notes:**
+- Some models might require a GitHub Copilot Pro+ subscription to access.
 
 ### 3. Configure Models (Optional)
 
